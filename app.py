@@ -1,12 +1,11 @@
-import re
 import pandas as pd
 
 from sklearn import preprocessing
 from sklearn.tree import DecisionTreeClassifier, _tree
 import numpy as np
 from sklearn.model_selection import train_test_split
-import csv
 from flask import Flask, request, jsonify
+from utils import sec_predict, description_list, precautionDictionary
 
 app = Flask(__name__)
 
@@ -26,43 +25,6 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random
 clf = DecisionTreeClassifier()
 clf.fit(x_train, y_train)
 
-
-def getDescription():
-    description_list = {}
-    with open('MasterData/symptom_Description.csv') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        for row in csv_reader:
-            description_list[row[0]] = row[1]
-    return description_list
-
-
-def getPrecautionDict():
-    precautionDictionary = {}
-    with open('MasterData/symptom_precaution.csv') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        for row in csv_reader:
-            precautionDictionary[row[0]] = [row[1], row[2], row[3], row[4]]
-    return precautionDictionary
-
-
-description_list = getDescription()
-precautionDictionary = getPrecautionDict()
-
-
-def sec_predict(symptoms_exp):
-    df = pd.read_csv('Data/Training.csv')
-    X = df.iloc[:, :-1]
-    y = df['prognosis']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=20)
-    rf_clf = DecisionTreeClassifier()
-    rf_clf.fit(X_train, y_train)
-
-    symptoms_dict = {symptom: index for index, symptom in enumerate(X)}
-    input_vector = np.zeros(len(symptoms_dict))
-    for item in symptoms_exp:
-        input_vector[[symptoms_dict[item]]] = 1
-
-    return rf_clf.predict([input_vector])
 
 @app.route('/')
 def home():
@@ -93,5 +55,5 @@ def predict():
     return jsonify(response)
 
 
-# if __name__ =="__main__":
-#     app.run(debug=True)
+if __name__ =="__main__":
+    app.run(debug=True)
