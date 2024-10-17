@@ -1,7 +1,7 @@
 ```markdown
 # Prak
 
-Prak API is a backend service for the Prakruti health diagnosis application. It provides endpoints for symptom prediction and diagnosis based on machine learning models.
+Prak API is a backend service for My Health diagnosis application. It provides endpoints for symptom prediction and diagnosis based on machine learning models.
 
 ## Endpoints
 
